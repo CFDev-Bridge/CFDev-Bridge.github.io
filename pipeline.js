@@ -7,7 +7,7 @@ export const NODES = Object.freeze([
   { id: "oracle",   stage: 0, label: "Oracle DB",     detail: "Base del sistema de recomendaciones de Contraloría" },
   { id: "postgres", stage: 0, label: "PostgreSQL",    detail: "Base de datos relacional" },
   { id: "rest",     stage: 0, label: "APIs REST",     detail: "Integración de servicios REST" },
-  { id: "arcgis",   stage: 0, label: "ArcGIS Server", detail: "5 capas geoespaciales integradas al geoportal" },
+  { id: "arcgis",   stage: 0, label: "ArcGIS Server", short: "ArcGIS", detail: "5 capas geoespaciales integradas al geoportal" },
   { id: "python",   stage: 1, label: "Python",        detail: "8 reportes automatizados: de 48 h a 3 min" },
   { id: "azure",    stage: 1, label: "Azure",         detail: "Arquitectura Big Data en la nube" },
   { id: "sklearn",  stage: 2, label: "Scikit-learn",  detail: "Clasificador de aprobación crediticia" },
@@ -28,6 +28,9 @@ const EDGES = Object.freeze([
 const COMPACT_BREAKPOINT = 640;
 const NODE_HEIGHT = 30;
 const NODE_PADDING_X = 12;
+const COMPACT_NODE_HEIGHT = 26;
+const COMPACT_PADDING_X = 7;
+const COMPACT_FONT_SIZE = 11;   // mínimo legible recomendado para móvil
 const CURVE_SAMPLES = 32;
 const MAX_PACKETS = 70;
 const SPAWN_INTERVAL_MS = 110;
@@ -37,7 +40,7 @@ const MAX_DPR = 2;
 
 const DEFAULT_AREA = Object.freeze({
   regular: { left: 0.1, right: 0.9, top: 0.2, bottom: 0.9 },
-  compact: { left: 0.1, right: 0.9, top: 0.12, bottom: 0.88 },
+  compact: { left: 0.04, right: 0.96, top: 0.13, bottom: 0.93 },
 });
 
 export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNodeHover, area = DEFAULT_AREA }) {
@@ -115,20 +118,45 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
     const top = bounds.top * rect.height;
     const vSpan = (bounds.bottom - bounds.top) * rect.height;
 
-    ctx.font = labelFont();
+    ctx.font = labelFont(fontSize());
+    const padding = state.compact ? COMPACT_PADDING_X : NODE_PADDING_X;
     for (const node of nodes) {
-      const column = nodes.filter((n) => n.stage === node.stage);
-      const row = column.indexOf(node);
-      node.x = left + (span * node.stage) / (STAGES.length - 1);
-      node.y = top + (vSpan * (row + 1)) / (column.length + 1);
-      node.w = state.compact ? 12 : ctx.measureText(node.label).width + NODE_PADDING_X * 2;
-      node.h = state.compact ? 12 : NODE_HEIGHT;
+      node.text = state.compact && node.short ? node.short : node.label;
+      node.w = ctx.measureText(node.text).width + padding * 2;
+      node.h = state.compact ? COMPACT_NODE_HEIGHT : NODE_HEIGHT;
     }
+
+    STAGES.forEach((_, stage) => {
+      const group = nodes.filter((n) => n.stage === stage);
+      if (state.compact) {
+        // Vertical: cada etapa es una fila, de arriba hacia abajo, con nodos repartidos según su ancho.
+        const y = top + (vSpan * stage) / (STAGES.length - 1);
+        packRow(group, left, span, y);
+      } else {
+        group.forEach((node, index) => {
+          node.x = left + (span * stage) / (STAGES.length - 1);
+          node.y = top + (vSpan * (index + 1)) / (group.length + 1);
+        });
+      }
+    });
 
     for (const edge of edges) edge.points = sampleCurve(edge.from, edge.to);
   }
 
+  // Reparte los nodos de una fila dejando el mismo espacio entre ellos y en los extremos.
+  function packRow(group, left, span, y) {
+    const total = group.reduce((sum, node) => sum + node.w, 0);
+    const gap = Math.max((span - total) / (group.length + 1), 4);
+    let cursor = left + gap;
+    for (const node of group) {
+      node.x = cursor + node.w / 2;
+      node.y = y;
+      cursor += node.w + gap;
+    }
+  }
+
   function sampleCurve(from, to) {
+    if (state.compact) return sampleVerticalCurve(from, to);
     const x1 = from.x + from.w / 2;
     const x2 = to.x - to.w / 2;
     const dx = (x2 - x1) * 0.5;
@@ -136,6 +164,18 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
     for (let i = 0; i <= CURVE_SAMPLES; i++) {
       const t = i / CURVE_SAMPLES;
       points.push(cubicBezier(t, [x1, from.y], [x1 + dx, from.y], [x2 - dx, to.y], [x2, to.y]));
+    }
+    return points;
+  }
+
+  function sampleVerticalCurve(from, to) {
+    const y1 = from.y + from.h / 2;
+    const y2 = to.y - to.h / 2;
+    const dy = (y2 - y1) * 0.5;
+    const points = [];
+    for (let i = 0; i <= CURVE_SAMPLES; i++) {
+      const t = i / CURVE_SAMPLES;
+      points.push(cubicBezier(t, [from.x, y1], [from.x, y1 + dy], [to.x, y2 - dy], [to.x, y2]));
     }
     return points;
   }
@@ -159,7 +199,7 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
   }
 
   function isInside(node, x, y) {
-    const slop = state.compact ? 14 : 4;
+    const slop = state.compact ? 6 : 4;
     return Math.abs(x - node.x) <= node.w / 2 + slop && Math.abs(y - node.y) <= node.h / 2 + slop;
   }
 
@@ -219,7 +259,7 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
     if (width === 0 || height === 0) return;
     ctx.clearRect(0, 0, width, height);
 
-    if (!state.compact) drawStageLabels();
+    drawStageLabels();
 
     for (const edge of edges) {
       const progress = edgeReveal(edge);
@@ -245,13 +285,19 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
     ctx.save();
     ctx.font = labelFont(11);
     ctx.fillStyle = state.colors.muted;
-    ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
     const topY = Math.min(...nodes.map((n) => n.y - n.h / 2)) - 28;
     STAGES.forEach((stage, index) => {
       const node = nodes.find((n) => n.stage === index);
       ctx.globalAlpha = clamp((state.reveal * 1.3 - index * 0.25) / 0.2);
-      ctx.fillText(stage.toUpperCase(), node.x, topY);
+      if (state.compact) {
+        // En vertical, el nombre de la etapa va sobre su fila, alineado a la izquierda.
+        ctx.textAlign = "left";
+        ctx.fillText(stage.toUpperCase(), 12, node.y - node.h / 2 - 10);
+      } else {
+        ctx.textAlign = "center";
+        ctx.fillText(stage.toUpperCase(), node.x, topY);
+      }
     });
     ctx.restore();
   }
@@ -297,20 +343,18 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.beginPath();
-    ctx.roundRect(x, y, node.w, node.h, state.compact ? node.h / 2 : 8);
+    ctx.roundRect(x, y, node.w, node.h, 8);
     ctx.fillStyle = colors.surface;
     ctx.fill();
     ctx.lineWidth = isHovered ? 1.6 : 1;
     ctx.strokeStyle = isHovered ? colors.accent : mixFlash(colors, node.flash);
     ctx.stroke();
 
-    if (!state.compact) {
-      ctx.font = labelFont();
-      ctx.fillStyle = colors.text;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(node.label, node.x, node.y + 0.5);
-    }
+    ctx.font = labelFont(fontSize());
+    ctx.fillStyle = colors.text;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(node.text, node.x, node.y + 0.5);
     ctx.restore();
   }
 
@@ -328,6 +372,10 @@ export function createPipelineGraph(canvas, { pointerTarget, reducedMotion, onNo
 
   function edgeReveal(edge) {
     return clamp((state.reveal * 1.3 - edge.from.stage * 0.25 - 0.12) / 0.3);
+  }
+
+  function fontSize() {
+    return state.compact ? COMPACT_FONT_SIZE : 13;
   }
 
   function labelFont(size = 13) {

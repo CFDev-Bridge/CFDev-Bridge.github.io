@@ -544,10 +544,10 @@ export function createBrainGraph(canvas, { pointerTarget, reducedMotion, onNodeH
     const { colors, compact } = state;
     const isMajor = node.kind === "center" || node.kind === "hub";
     // Como en Obsidian: solo temas rotulados por defecto; los vecinos se rotulan al enfocar una nota.
-    const visible = isFocus || isNeighbor || (compact ? node.kind === "center" : isMajor);
+    const visible = isFocus || isNeighbor || isMajor;
     if (!visible) return;
 
-    const size = node.kind === "center" ? 14 : isMajor ? 12.5 : 11;
+    const size = node.kind === "center" ? (compact ? 12.5 : 14) : isMajor ? (compact ? 11 : 12.5) : 11;
     const weight = isMajor ? 600 : 500;
     ctx.font = `${weight} ${size}px ${fontFamily()}`;
     ctx.textAlign = "center";
