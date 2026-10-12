@@ -94,6 +94,11 @@ const ALPHA_DECAY = 0.985;
 const ALPHA_MIN = 0.001;
 const DRAG_THRESHOLD_PX = 4;
 const PRESETTLE_STEPS = 320;
+const SIDE_MIN_WIDTH = 380;   // ancho mínimo del grafo para ubicarlo al lado del texto
+const SIDE_MAX_WIDTH = 760;   // en pantallas anchas el grafo no se estira de más
+const TEXT_GAP = 40;          // separación entre la columna de texto y el grafo
+const EDGE_MARGIN = 24;
+const LABEL_MARGIN = 56;      // espacio a la derecha para que las etiquetas no se corten
 
 export const NOTE_COUNT = NOTES.length;
 export const LINK_COUNT = LINKS.length;
@@ -194,15 +199,15 @@ export function createBrainGraph(canvas, { pointerTarget, reducedMotion, onNodeH
     state.width = rect.width;
     state.height = rect.height;
     state.compact = rect.width < COMPACT_BREAKPOINT;
-    // El CSS decide si el grafo va al lado del texto o encima; así CSS y JS no se desincronizan.
-    const stacked = getComputedStyle(canvas).getPropertyValue("--graph-mode").trim() === "top";
+    const { mode, textRight } = chooseLayout(rect.width);
+    if (pointerTarget.dataset.layout !== mode) pointerTarget.dataset.layout = mode;
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    state.region = stacked
+    state.region = mode === "top"
       ? { cx: rect.width * 0.5, cy: 175, w: Math.min(rect.width * 0.84, 760), h: 200 }
-      : { cx: rect.width * 0.72, cy: rect.height * 0.5, w: rect.width * 0.4, h: rect.height * 0.74 };
+      : sideRegion(rect, textRight);
     state.base = Math.min(state.region.w, state.region.h) / 5.2;
 
     for (const node of nodes) {
@@ -224,6 +229,26 @@ export function createBrainGraph(canvas, { pointerTarget, reducedMotion, onNodeH
       state.alpha = Math.max(state.alpha, 0.3);
       if (reducedMotion) presettle();
     }
+  }
+
+  // Al lado del texto si queda espacio suficiente a su derecha; si no, encima.
+  // El ancho de la columna de texto se lee de la CSS (--hero-text-width) para no duplicarlo.
+  function chooseLayout(width) {
+    const content = pointerTarget.querySelector(".hero-content");
+    if (!content) return { mode: "side", textRight: width * 0.45 };
+
+    const rootSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const textWidthRem = parseFloat(getComputedStyle(pointerTarget).getPropertyValue("--hero-text-width")) || 30;
+    const textRight = parseFloat(getComputedStyle(content).paddingLeft) + textWidthRem * rootSize;
+    const available = width - textRight - TEXT_GAP - EDGE_MARGIN;
+    return { mode: available >= SIDE_MIN_WIDTH ? "side" : "top", textRight };
+  }
+
+  function sideRegion(rect, textRight) {
+    const left = textRight + TEXT_GAP;
+    const right = rect.width - LABEL_MARGIN;
+    const w = Math.min(right - left, SIDE_MAX_WIDTH);
+    return { cx: (left + right) / 2, cy: rect.height * 0.5, w, h: rect.height * 0.74 };
   }
 
   function radiusFor(node) {
