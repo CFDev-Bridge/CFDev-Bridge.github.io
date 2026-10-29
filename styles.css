@@ -788,6 +788,7 @@ main {
   transition: border-color 0.15s;
 }
 .project:hover { border-color: var(--line-strong); }
+.project-wide { grid-column: 1 / -1; }
 .project h3 { font-size: 1.2rem; }
 .project > p:not(.project-tag):not(.backlinks) { color: var(--muted); }
 .project .backlinks { margin-top: 0.2rem; }

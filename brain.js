@@ -43,6 +43,7 @@ const NOTES = Object.freeze([
   { id: "php", label: "PHP", kind: "tool", detail: "Sistemas web internos", href: SECTION.stack },
   { id: "java", label: "Java", kind: "tool", detail: "Sistemas internos y simulador de amortización", href: SECTION.stack },
   { id: "git", label: "Git", kind: "tool", detail: "Control de versiones", href: SECTION.stack },
+  { id: "docker", label: "Docker", kind: "tool", detail: "Entornos de desarrollo aislados y reproducibles", href: SECTION.stack },
   { id: "rest", label: "APIs REST", kind: "tool", detail: "Integración de servicios", href: SECTION.stack },
 
   { id: "arcgis-server", label: "ArcGIS Server", kind: "tool", detail: "5 capas integradas al geoportal municipal", href: SECTION.stack },
@@ -56,6 +57,7 @@ const NOTES = Object.freeze([
   { id: "credito", label: "Modelo crediticio", kind: "project", detail: "Clasificador de aprobación de crédito", href: SECTION.proyectos },
   { id: "gestos", label: "Control por gestos", kind: "project", detail: "Ratón virtual controlado con la mano", href: SECTION.proyectos },
   { id: "amortizacion", label: "Simulador de amortización", kind: "project", detail: "Métodos francés y alemán", href: SECTION.proyectos },
+  { id: "opencode", label: "OpenCode-DevEnv", kind: "project", detail: "Entorno de desarrollo reproducible con Docker", href: SECTION.proyectos },
 
   { id: "magister", label: "Magíster Big Data", kind: "edu", detail: "Universidad del Pacífico · 05/2025 — 05/2026", href: SECTION.formacion },
   { id: "master", label: "Máster Arquitectura Big Data", kind: "edu", detail: "Universidad Europea del Principado de Andorra", href: SECTION.formacion },
@@ -79,6 +81,7 @@ const LINKS = Object.freeze([
   ["credito", "sklearn"], ["credito", "python"],
   ["gestos", "mediapipe"], ["gestos", "opencv"], ["gestos", "js"],
   ["amortizacion", "java"],
+  ["opencode", "docker"], ["opencode", "git"], ["dev", "docker"],
   ["magister", "series"], ["magister", "deep"], ["magister", "bigdata"],
   ["master", "bigdata"],
 ]);
