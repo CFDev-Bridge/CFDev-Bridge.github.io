@@ -6,7 +6,7 @@ Portafolio profesional de **Christian Francisco Núñez Vaca**, Ingeniero de Sof
 
 ## Qué incluye
 
-- **Grafo "segundo cerebro"** (estilo Obsidian): 44 notas y 63 enlaces entre temas, herramientas, cargos, proyectos y títulos, con simulación de fuerzas, arrastre y vista previa al pasar el cursor.
+- **Grafo "segundo cerebro"** (estilo Obsidian): 46 notas y 68 enlaces entre temas, herramientas, cargos, proyectos y títulos, con simulación de fuerzas, arrastre y vista previa al pasar el cursor.
 - **Pipeline de datos animado** del stack: fuentes → procesamiento → modelos → entrega.
 - Impacto cuantificado, experiencia, proyectos, stack y formación.
 - Tema Sistema · Claro · Oscuro, diseño adaptable y accesible (contraste WCAG AA, teclado, movimiento reducido).

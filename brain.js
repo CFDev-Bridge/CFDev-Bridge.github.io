@@ -17,14 +17,14 @@ const NOTES = Object.freeze([
   { id: "dev", label: "Desarrollo", kind: "hub", detail: "Aplicaciones web, móviles y bases de datos", href: SECTION.stack },
   { id: "gis", label: "GIS", kind: "hub", detail: "Geoportal, capas geoespaciales y dashboards de obras", href: SECTION.stack },
   { id: "gad", label: "GAD Ambato", kind: "hub", detail: "Analista desde 09/2024 · practicante de software 2022 – 2024", href: SECTION.experiencia },
-  { id: "edu", label: "Formación", kind: "hub", detail: "3 títulos · doble titulación internacional", href: SECTION.formacion },
+  { id: "edu", label: "Formación", kind: "hub", detail: "2 títulos · doble titulación internacional · 2 diplomados", href: SECTION.formacion },
 
   { id: "python", label: "Python", kind: "tool", detail: "8 reportes automatizados: de 48 h a 3 min", href: SECTION.stack },
   { id: "sql", label: "SQL", kind: "tool", detail: "Consultas y modelado de datos", href: SECTION.stack },
   { id: "powerbi", label: "Power BI", kind: "tool", detail: "Dashboards de obras y reportes para 10 áreas", href: SECTION.stack },
   { id: "excel", label: "Excel avanzado", kind: "tool", detail: "Análisis y reportes", href: SECTION.stack },
   { id: "azure", label: "Azure", kind: "tool", detail: "Nube para arquitecturas de datos", href: SECTION.stack },
-  { id: "bigdata", label: "Big Data", kind: "tool", detail: "Arquitectura Big Data (máster)", href: SECTION.stack },
+  { id: "bigdata", label: "Big Data", kind: "tool", detail: "Arquitectura Big Data (maestría)", href: SECTION.stack },
 
   { id: "sklearn", label: "Scikit-learn", kind: "tool", detail: "Clasificación supervisada", href: SECTION.stack },
   { id: "series", label: "Series temporales", kind: "tool", detail: "Pronóstico de demanda e inventarios", href: SECTION.stack },
@@ -39,6 +39,8 @@ const NOTES = Object.freeze([
   { id: "mysql", label: "MySQL", kind: "tool", detail: "Base de datos relacional", href: SECTION.stack },
   { id: "angular", label: "Angular", kind: "tool", detail: "Desarrollo web", href: SECTION.stack },
   { id: "react", label: "React", kind: "tool", detail: "Desarrollo web", href: SECTION.stack },
+  { id: "flutter", label: "Flutter", kind: "tool", detail: "Aplicaciones móviles internas", href: SECTION.stack },
+  { id: "reactnative", label: "React Native", kind: "tool", detail: "Aplicaciones móviles internas", href: SECTION.stack },
   { id: "js", label: "JavaScript", kind: "tool", detail: "Sistemas web internos y visión por computadora", href: SECTION.stack },
   { id: "php", label: "PHP", kind: "tool", detail: "Sistemas web internos", href: SECTION.stack },
   { id: "java", label: "Java", kind: "tool", detail: "Sistemas internos y simulador de amortización", href: SECTION.stack },
@@ -51,7 +53,7 @@ const NOTES = Object.freeze([
   { id: "arcgis-dash", label: "ArcGIS Dashboards", kind: "tool", detail: "Monitoreo de 225 obras públicas", href: SECTION.stack },
 
   { id: "analista", label: "Analista de Planeación", kind: "role", detail: "09/2024 — hoy · 122 KPI del POA para 28 direcciones", href: SECTION.experiencia },
-  { id: "practicante", label: "Practicante de Software", kind: "role", detail: "08/2022 — 04/2024 · 6 sistemas web y móviles", href: SECTION.experiencia },
+  { id: "practicante", label: "Practicante de Software", kind: "role", detail: "08/2022 — 04/2024 · 6 sistemas web y móviles internos", href: SECTION.experiencia },
 
   { id: "chatbot", label: "Chatbot de agenda", kind: "project", detail: "Agenda citas por WhatsApp con soporte multicliente", href: SECTION.proyectos },
   { id: "credito", label: "Modelo crediticio", kind: "project", detail: "Clasificador de aprobación de crédito", href: SECTION.proyectos },
@@ -59,8 +61,8 @@ const NOTES = Object.freeze([
   { id: "amortizacion", label: "Simulador de amortización", kind: "project", detail: "Métodos francés y alemán", href: SECTION.proyectos },
   { id: "opencode", label: "OpenCode-DevEnv", kind: "project", detail: "Entorno de desarrollo reproducible con Docker", href: SECTION.proyectos },
 
-  { id: "magister", label: "Magíster Big Data", kind: "edu", detail: "Universidad del Pacífico · 05/2025 — 05/2026", href: SECTION.formacion },
-  { id: "master", label: "Máster Arquitectura Big Data", kind: "edu", detail: "Universidad Europea del Principado de Andorra", href: SECTION.formacion },
+  { id: "magister", label: "Magíster Big Data", kind: "edu", detail: "Universidad del Pacífico · doble titulación con Andorra", href: SECTION.formacion },
+  { id: "diplomados", label: "Diplomados de Experto", kind: "edu", detail: "Procesamiento y Análisis de Datos · IA y Sistemas Cognitivos", href: SECTION.formacion },
   { id: "ingenieria", label: "Ingeniería de Software", kind: "edu", detail: "Universidad Técnica de Ambato · 2019 — 2024", href: SECTION.formacion },
 ]);
 
@@ -69,13 +71,13 @@ const LINKS = Object.freeze([
   ["datos", "python"], ["datos", "sql"], ["datos", "powerbi"], ["datos", "excel"], ["datos", "azure"], ["datos", "bigdata"],
   ["ia", "sklearn"], ["ia", "series"], ["ia", "deep"], ["ia", "opencv"], ["ia", "mediapipe"], ["ia", "rasa"],
   ["dev", "apex"], ["dev", "oracle"], ["dev", "postgres"], ["dev", "mysql"], ["dev", "angular"], ["dev", "react"],
-  ["dev", "js"], ["dev", "php"], ["dev", "java"], ["dev", "git"], ["dev", "rest"],
+  ["dev", "js"], ["dev", "php"], ["dev", "flutter"], ["dev", "reactnative"], ["dev", "java"], ["dev", "git"], ["dev", "rest"],
   ["gis", "arcgis-server"], ["gis", "arcgis-online"], ["gis", "arcgis-dash"],
   ["gad", "analista"], ["gad", "practicante"],
-  ["edu", "magister"], ["edu", "master"], ["edu", "ingenieria"],
+  ["edu", "magister"], ["edu", "diplomados"], ["edu", "ingenieria"],
   ["analista", "powerbi"], ["analista", "arcgis-dash"], ["analista", "python"],
   ["practicante", "apex"], ["practicante", "arcgis-server"], ["practicante", "java"],
-  ["practicante", "js"], ["practicante", "php"], ["practicante", "powerbi"],
+  ["practicante", "js"], ["practicante", "php"], ["practicante", "flutter"], ["practicante", "reactnative"], ["practicante", "powerbi"],
   ["apex", "oracle"], ["arcgis-server", "rest"],
   ["chatbot", "rasa"], ["chatbot", "python"],
   ["credito", "sklearn"], ["credito", "python"],
@@ -83,7 +85,7 @@ const LINKS = Object.freeze([
   ["amortizacion", "java"],
   ["opencode", "docker"], ["opencode", "git"], ["dev", "docker"],
   ["magister", "series"], ["magister", "deep"], ["magister", "bigdata"],
-  ["master", "bigdata"],
+  ["diplomados", "python"], ["diplomados", "deep"],
 ]);
 
 const KIND_LABEL = Object.freeze({

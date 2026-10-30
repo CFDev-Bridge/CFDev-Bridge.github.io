@@ -850,6 +850,7 @@ main {
 }
 .edu .job-org { margin-bottom: 0.75rem; }
 .edu-note { color: var(--muted); font-size: 0.9375rem; }
+.edu-note + .edu-note { margin-top: 0.5rem; }
 .edu-badge {
   display: inline-flex;
   align-items: center;
